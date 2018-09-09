@@ -1,0 +1,17 @@
+{
+  "name": "code-test-hunter",
+  "version": "0.0.1",
+  "description": "Check for codes in fs and build a browsing system for it",
+  "main": "index.js",
+  "repository": "git@github.com:lysz210/code-test-hunter.git",
+  "author": "Lingyong Sun <lysz210@gmaill.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "koa": "^2.5.2"
+  }
+}
