@@ -21,7 +21,7 @@ export default function* lookup (directory: string) {
   // stack initialization
   // with the first directory to look
   let stack = [path.resolve(directory)]
-
+  console.log(directory)
   // loop to visite the fs tree
   while (stack.length) {
     let file = stack.pop()
