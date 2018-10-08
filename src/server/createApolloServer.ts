@@ -1,18 +1,20 @@
 import { ApolloServer, gql } from 'apollo-server-koa'
+import { map } from 'lodash'
+import typeDefs from './apollo/schema'
 
-const typeDefs = gql`
-type Query {
-  hello: String
-}
-`;
-
-const resolvers = {
-  Query: {
-    hello () { return 'Hello world!' }
+export default function createApolloServer ({ pouchdb }: {pouchdb: any}) {
+  const resolvers = {
+    Query: {
+      hello () { return 'Hello world!' },
+      dependencies () {
+        return pouchdb.query('packages/dependencies').then((docs:any) => {
+          return map(docs.rows, ({ key: [name, version]}: {key: string[]}) => {
+            return {name, version}
+          })
+        })
+      }
+    }
   }
-}
-
-export default function createApolloServer () {
   return new ApolloServer({
     typeDefs,
     resolvers

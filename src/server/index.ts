@@ -7,14 +7,14 @@ import { readFileSync } from 'fs';
 import createApolloServer from './createApolloServer'
 
 const app = new Koa()
-const db = createPouch()
-const apollo = createApolloServer()
+const pouchdb = createPouch()
+const apollo = createApolloServer({ pouchdb })
 
 for (let filename of lookup('..')) {
   let pkg = JSON.parse(readFileSync(filename).toString())
   for (let key in pkg) {
     if (key.startsWith('_')) delete pkg[key]
-    db.upsert(filename, (doc:any) => {
+    pouchdb.upsert(filename, (doc:any) => {
       if (!doc._id) doc._id = filename
       return {
         ...doc,
@@ -28,7 +28,10 @@ apollo.applyMiddleware({ app })
 
 app.use(async (ctx: any, next:any) => {
   if (ctx.path !== '/test') return await next()
-  ctx.body = await db.allDocs()
+  ctx.body = await pouchdb.query('packages/dependencies').then((docs: any) => {
+    // console.log(docs.map((doc: any) => doc.value))
+    return docs
+  })
 })
 app.use(Static(resolve(__dirname, 'public')))
 
