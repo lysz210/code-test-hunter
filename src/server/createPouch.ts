@@ -1,4 +1,4 @@
-import PouchDB from 'pouchdb-node'
+import * as PouchDB from 'pouchdb-node'
 import { packagesDD } from './pouchdb/packages'
 PouchDB.plugin(require('pouchdb-upsert'))
 PouchDB.plugin(require('pouchdb-adapter-memory'))

@@ -1,12 +1,14 @@
-import Koa from 'koa'
-import Static from 'koa-static'
+import * as Koa from 'koa'
+import * as Static from 'koa-static'
 import { resolve } from 'path'
 import createPouch from './createPouch'
 import lookup from './entry-point-lookup'
 import { readFileSync } from 'fs';
+import createApolloServer from './createApolloServer'
 
 const app = new Koa()
 const db = createPouch()
+const apollo = createApolloServer()
 
 for (let filename of lookup('..')) {
   let pkg = JSON.parse(readFileSync(filename).toString())
@@ -22,7 +24,9 @@ for (let filename of lookup('..')) {
   }
 }
 
-app.use(async (ctx, next) => {
+apollo.applyMiddleware({ app })
+
+app.use(async (ctx: any, next:any) => {
   if (ctx.path !== '/test') return await next()
   ctx.body = await db.allDocs()
 })
