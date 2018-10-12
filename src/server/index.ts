@@ -28,7 +28,9 @@ apollo.applyMiddleware({ app })
 
 app.use(async (ctx: any, next:any) => {
   if (ctx.path !== '/test') return await next()
-  ctx.body = await pouchdb.query('packages/dependencies').then((docs: any) => {
+  ctx.body = await pouchdb.query('packages/dependencies', {
+    key: ['rxjs', "5.0.0-beta.2"]
+  }).then((docs: any) => {
     // console.log(docs.map((doc: any) => doc.value))
     return docs
   })
